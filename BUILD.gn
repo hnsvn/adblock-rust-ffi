@@ -1,0 +1,39 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//huhi/build/cargo.gni")
+
+group("adblock_rust_ffi") {
+  public_configs = [ ":external_config" ]
+  public_deps = [ "//huhi/build/rust" ]
+}
+
+config("external_config") {
+  if (is_mac) {
+    defines = [ "ADBLOCK_SHARED_LIBRARY"]
+  }
+}
+
+source_set("rust_ffi") {
+  visibility = [ "//huhi/build/rust:*" ]
+
+  public_configs = [ ":external_config" ]
+
+  defines = [ "ADBLOCK_IMPLEMENTATION" ]
+
+  sources = [
+    "src/lib.h",
+    "src/wrapper.cpp",
+    "src/wrapper.hpp"
+  ]
+}
+
+source_set("rust_lib") {
+  visibility = [ "//huhi/build/rust:*" ]
+
+  inputs = [
+    "Cargo.toml",
+    "src/lib.rs",
+  ]
+}
